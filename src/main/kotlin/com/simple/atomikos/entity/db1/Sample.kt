@@ -2,7 +2,7 @@ package com.simple.atomikos.entity.db1
 
 import jakarta.persistence.*
 
-@Table(name="sample")
+@Table(name="tb_sample")
 @Entity
 class Sample(
     @Id

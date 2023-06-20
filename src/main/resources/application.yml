@@ -11,18 +11,7 @@ spring:
     console:
       enabled: true
       path: /h2-console
-  datasource:
-    sample:
-      url: jdbc:h2:mem:sampledb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      username: sa
-      password:
-      driver-class-name: org.h2.jdbcx.JdbcDataSource
 
-    item:
-      url: jdbc:h2:mem:itemdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      username: sa
-      password:
-      driver-class-name: org.h2.jdbcx.JdbcDataSource
 
 logging:
   level:

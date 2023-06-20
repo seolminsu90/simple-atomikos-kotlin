@@ -1,10 +1,10 @@
-package com.simple.atomikos.entity.db2
+package com.simple.atomikos.entity.db3
 
 import jakarta.persistence.*
 
-@Table(name="tb_item")
+@Table(name="tb_second")
 @Entity
-class Item(
+class Second(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = 0,

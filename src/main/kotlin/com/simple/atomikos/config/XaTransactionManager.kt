@@ -2,46 +2,37 @@ package com.simple.atomikos.config
 
 import com.atomikos.icatch.jta.UserTransactionImp
 import com.atomikos.icatch.jta.UserTransactionManager
+import jakarta.transaction.TransactionManager
 import jakarta.transaction.UserTransaction
+import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.orm.jpa.JpaTransactionManager
+import org.springframework.context.annotation.DependsOn
 import org.springframework.transaction.PlatformTransactionManager
-import org.springframework.transaction.TransactionManager
 import org.springframework.transaction.jta.JtaTransactionManager
-
 
 @Configuration
 class XaTransactionManager {
-
-    @Bean
+    @Bean(name = ["userTransaction"])
     @Throws(Throwable::class)
-    fun userTransaction(): UserTransactionImp {
-        val userTransaction = UserTransactionImp()
-        userTransaction.setTransactionTimeout(300)
-
-        return userTransaction
+    fun userTransaction(): UserTransaction {
+        val userTransactionImp = UserTransactionImp()
+        userTransactionImp.setTransactionTimeout(10000)
+        return userTransactionImp
     }
 
-    @Bean(initMethod = "init", destroyMethod = "close")
-    fun userTransactionManager(): UserTransactionManager {
-        val transactionManager = UserTransactionManager()
-        transactionManager.setForceShutdown(false)
-
-        return transactionManager
+    @Bean(name = ["atomikosTransactionManager"])
+    @Throws(Throwable::class)
+    fun atomikosTransactionManager(): UserTransactionManager {
+        val userTransactionManager = UserTransactionManager()
+        userTransactionManager.forceShutdown = false
+        return userTransactionManager
     }
 
-    @Bean
-    fun transactionManager(
-        userTransactionManager: UserTransactionManager,
-        userTransaction: UserTransactionImp
-    ): PlatformTransactionManager {
-        var transactionManager = JtaTransactionManager()
-        transactionManager.userTransaction = userTransaction
-        transactionManager.transactionManager = userTransactionManager
-        transactionManager.setTransactionSynchronizationName("SYNCHRONIZATION_ON_ACTUAL_TRANSACTION")
-
-        return transactionManager
+    @Bean(name = ["globalTxManager"])
+    @DependsOn(*["userTransaction", "atomikosTransactionManager"])
+    @Throws(Throwable::class)
+    fun transactionManager(userTransaction: UserTransaction, atomikosTransactionManager: UserTransactionManager): PlatformTransactionManager {
+        return JtaTransactionManager(userTransaction, atomikosTransactionManager)
     }
-
 }
