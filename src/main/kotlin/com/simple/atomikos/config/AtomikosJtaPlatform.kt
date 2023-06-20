@@ -7,10 +7,10 @@ import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatfor
 class AtomikosJtaPlatform() : AbstractJtaPlatform() {
 
     override fun locateTransactionManager(): TransactionManager {
-        return XaDatatsourceUtil.userTransactionManager
+        return XaDatatsourceUtil.userTransactionManager()
     }
 
     override fun locateUserTransaction(): UserTransaction {
-        return XaDatatsourceUtil.userTransaction
+        return XaDatatsourceUtil.userTransaction()
     }
 }

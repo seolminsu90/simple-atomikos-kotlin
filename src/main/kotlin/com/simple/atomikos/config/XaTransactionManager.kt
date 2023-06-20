@@ -13,13 +13,13 @@ class XaTransactionManager {
     @Bean(name = ["userTransaction"])
     @Throws(Throwable::class)
     fun userTransaction(): UserTransaction {
-        return XaDatatsourceUtil.userTransaction
+        return XaDatatsourceUtil.userTransaction()
     }
 
     @Bean(name = ["userTransactionManager"])
     @Throws(Throwable::class)
     fun userTransactionManager(): UserTransactionManager {
-        return XaDatatsourceUtil.userTransactionManager
+        return XaDatatsourceUtil.userTransactionManager()
     }
 
     @Bean(name = ["globalTxManager"])

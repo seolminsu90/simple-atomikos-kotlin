@@ -40,10 +40,15 @@ object XaDatatsourceUtil {
         return properties
     }
 
-    var userTransactionManager: UserTransactionManager = UserTransactionManager().apply {
-        forceShutdown = false
+    fun userTransactionManager(): UserTransactionManager {
+        return UserTransactionManager().apply {
+            forceShutdown = false
+        }
     }
-    var userTransaction: UserTransaction = UserTransactionImp().apply {
-        setTransactionTimeout(1000)
+
+    fun userTransaction(): UserTransaction {
+        return UserTransactionImp().apply {
+            setTransactionTimeout(1000)
+        }
     }
 }
