@@ -1,6 +1,9 @@
 package com.simple.atomikos.config
 
+import com.atomikos.icatch.jta.UserTransactionImp
+import com.atomikos.icatch.jta.UserTransactionManager
 import com.atomikos.spring.AtomikosDataSourceBean
+import jakarta.transaction.UserTransaction
 import java.util.*
 import javax.sql.DataSource
 
@@ -35,5 +38,12 @@ object XaDatatsourceUtil {
         //properties.put("hibernate.format_sql", "true");
         //properties.put("hibernate.use_sql_comments", "true");
         return properties
+    }
+
+    var userTransactionManager: UserTransactionManager = UserTransactionManager().apply {
+        forceShutdown = false
+    }
+    var userTransaction: UserTransaction = UserTransactionImp().apply {
+        setTransactionTimeout(1000)
     }
 }

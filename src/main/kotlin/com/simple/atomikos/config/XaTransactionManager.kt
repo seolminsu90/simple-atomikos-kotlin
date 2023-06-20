@@ -1,10 +1,7 @@
 package com.simple.atomikos.config
 
-import com.atomikos.icatch.jta.UserTransactionImp
 import com.atomikos.icatch.jta.UserTransactionManager
-import jakarta.transaction.TransactionManager
 import jakarta.transaction.UserTransaction
-import org.hibernate.engine.transaction.jta.platform.internal.AbstractJtaPlatform
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.DependsOn
@@ -16,23 +13,19 @@ class XaTransactionManager {
     @Bean(name = ["userTransaction"])
     @Throws(Throwable::class)
     fun userTransaction(): UserTransaction {
-        val userTransactionImp = UserTransactionImp()
-        userTransactionImp.setTransactionTimeout(10000)
-        return userTransactionImp
+        return XaDatatsourceUtil.userTransaction
     }
 
-    @Bean(name = ["atomikosTransactionManager"])
+    @Bean(name = ["userTransactionManager"])
     @Throws(Throwable::class)
-    fun atomikosTransactionManager(): UserTransactionManager {
-        val userTransactionManager = UserTransactionManager()
-        userTransactionManager.forceShutdown = false
-        return userTransactionManager
+    fun userTransactionManager(): UserTransactionManager {
+        return XaDatatsourceUtil.userTransactionManager
     }
 
     @Bean(name = ["globalTxManager"])
-    @DependsOn(*["userTransaction", "atomikosTransactionManager"])
+    @DependsOn(*["userTransaction", "userTransactionManager"])
     @Throws(Throwable::class)
-    fun transactionManager(userTransaction: UserTransaction, atomikosTransactionManager: UserTransactionManager): PlatformTransactionManager {
-        return JtaTransactionManager(userTransaction, atomikosTransactionManager)
+    fun transactionManager(userTransaction: UserTransaction, userTransactionManager: UserTransactionManager): PlatformTransactionManager {
+        return JtaTransactionManager(userTransaction, userTransactionManager)
     }
 }
